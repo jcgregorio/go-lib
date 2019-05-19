@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/jcgregorio/go-lib/config"
 	"github.com/jcgregorio/slog"
-	"github.com/jcgregorio/webmention-run/config"
 )
 
 type claims struct {
