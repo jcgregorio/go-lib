@@ -16,6 +16,7 @@ var (
 	HOST                = "https://webmention-...-a.run.app"
 	ADMINS              = []string{"someone@example.org"}
 	PORT                = "8000"
+	AUTHOR              = "Joe Gregorio"
 )
 
 func mustFindEnv(key string) string {
@@ -34,4 +35,5 @@ func init() {
 	HOST = mustFindEnv("HOST")
 	ADMINS = strings.Split(mustFindEnv("ADMINS"), ",")
 	PORT = mustFindEnv("PORT")
+	AUTHOR = mustFindEnv("AUTHOR")
 }
