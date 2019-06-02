@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jcgregorio/go-lib/config"
 	"github.com/jcgregorio/slog"
 )
 
@@ -23,11 +22,23 @@ var (
 	}
 )
 
+type Admin struct {
+	clientId string
+	admins   []string
+}
+
+func New(clientId string, admins []string) *Admin {
+	return &Admin{
+		clientId: clientId,
+		admins:   admins,
+	}
+}
+
 // IsAdmin returns true if the user is logged in and their email address appears
-// in config.ADMINS.
+// in the list of admins.
 //
 // The actual login is handled in JS by Google Sign-In for Websites.
-func IsAdmin(r *http.Request, log slog.Logger) bool {
+func (a *Admin) IsAdmin(r *http.Request, log slog.Logger) bool {
 	idtoken, err := r.Cookie("id_token")
 	if err != nil {
 		log.Infof("No cookie supplied.")
@@ -44,12 +55,12 @@ func IsAdmin(r *http.Request, log slog.Logger) bool {
 		return false
 	}
 	// Check if aud is correct.
-	if claims.Aud != config.CLIENT_ID {
+	if claims.Aud != a.clientId {
 		log.Infof("Wrong audience.")
 		return false
 	}
 
-	for _, email := range config.ADMINS {
+	for _, email := range a.admins {
 		if email == claims.Mail {
 			return true
 		}
